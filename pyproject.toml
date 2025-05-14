@@ -1,3 +1,10 @@
+[project]
+dependencies = [
+    "fpdf2~=2.8",
+    "marshmallow~=4.0",
+    "Pillow~=11.2"
+]
+
 [tool.poetry]
 name = "exammaker"
 version = "0.0.1"

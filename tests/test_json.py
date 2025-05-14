@@ -1,0 +1,30 @@
+import json
+
+import pytest
+
+from exammaker.question import QuestionType
+from exammaker.json import dump, dumps, load, loads
+
+JSON_OBJ = {
+    "i": 1,
+    "f": 1.1,
+    "s": "abc",
+    "l": ["a", "b", "c"],
+    "e": QuestionType.SHORT_ANSWER
+}
+
+
+def test_dumps_loads() -> None:
+    s = dumps(JSON_OBJ)
+    assert s is not None
+    o = loads(s)
+    assert o is not None
+    assert o == JSON_OBJ
+
+
+def test_dumps_loads_with_encoder() -> None:
+    s = dumps(JSON_OBJ, cls=json.JSONEncoder)
+    assert s is not None
+    o = loads(s)
+    assert o is not None
+    assert o == JSON_OBJ

@@ -1,0 +1,61 @@
+[
+  {
+    "height": 120.0,
+    "qtype": "SHORT_ANSWER",
+    "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  What is its final velocity?",
+    "answer": "sqrt(d*g)",
+    "variables": [
+      [
+        "g",
+        "9.8"
+      ],
+      [
+        "m1",
+        "choose(1,2,3)"
+      ],
+      [
+        "d",
+        "choose(11,12,13)"
+      ]
+    ],
+    "image": ""
+  },
+  {
+    "height": 120.0,
+    "qtype": "SHORT_ANSWER",
+    "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  What is its final kinetic energy?",
+    "answer": "m1 * d * g / 2",
+    "variables": [
+      [
+        "g",
+        "9.8"
+      ],
+      [
+        "m1",
+        "choose(1,2,3)"
+      ],
+      [
+        "d",
+        "choose(11,12,13)"
+      ]
+    ],
+    "image_file": "x.png"
+  },
+  {
+    "height": 120.0,
+    "qtype": "SHORT_ANSWER",
+    "text": "<sup>1</sup>&frasl;<sub>2</sub> of a mass m<sub>1</sub> of {m} kg, has mass?",
+    "answer": "select(i, 1, 2, 3)",
+    "variables": [
+      [
+        "i",
+        "choose(0,1,2)"
+      ],
+      [
+        "m",
+        "select(i,2,4,6)"
+      ]
+    ],
+    "image_file": ""
+  }
+]
