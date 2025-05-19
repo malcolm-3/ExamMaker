@@ -2,11 +2,12 @@ import json
 from base64 import b64encode, b64decode
 from enum import Enum
 from pathlib import Path
-from typing import Optional, List, Dict
-from marshmallow import Schema, fields, post_load, ValidationError
-from PIL import Image
+from typing import Optional, List
 
-from exammaker.parser import ExamMakerParser
+from PIL import Image
+from marshmallow import Schema, fields, post_load, ValidationError
+
+from .parser import ExamMakerParser
 
 
 class QuestionType(Enum):
@@ -109,6 +110,6 @@ class QuestionSchema(Schema):
     image_file = fields.Str(required=False, load_only=True)
 
     @post_load
-    def make_question(self, data, **kwargs):
+    def make_question(self, data, **_):
         return Question(**data)
 

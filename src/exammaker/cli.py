@@ -1,4 +1,3 @@
-import json
 from typing import List
 
 import click
@@ -22,7 +21,7 @@ The questions.json file is a list of Questions.
 Each Question has the following properties
     qtype        currently this can only be "SHORT_ANSWER"
     text         the str.format templated question text
-    answer       a plusminus AritmeticParse string used to 
+    answer       a plusminus ArithmeticParse string used to 
                  calculate the answer from the variables
     variables    a list of lists of name/value strings
                  - the name is the variable name used both

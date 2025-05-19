@@ -1,6 +1,6 @@
 import json
 
-from exammaker.question import QuestionType
+from .question import QuestionType
 
 PUBLIC_ENUMS = {
     'QuestionType': QuestionType,

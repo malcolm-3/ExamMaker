@@ -51,7 +51,7 @@ pytest
 ### Documentation
 
 The documentation is automatically generated from the content of the [docs directory](https://github.com/malcolm-3/exammaker/tree/master/docs) and from the docstrings
- of the public signatures of the source code. The documentation is updated and published as a [Github Pages page](https://pages.github.com/) automatically as part each release.
+ of the public signatures of the source code. The documentation is updated and published as a [GitHub Pages page](https://pages.github.com/) automatically as part each release.
 
 ### Releasing
 

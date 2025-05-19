@@ -1,8 +1,10 @@
 [project]
+name = "exammaker"
 dependencies = [
     "fpdf2~=2.8",
     "marshmallow~=4.0",
-    "Pillow~=11.2"
+    "Pillow~=11.2",
+    "plusminus"
 ]
 
 [tool.poetry]
@@ -39,7 +41,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8.1, <4.0"
+python = ">=3.9, <4.0"
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings = {version = ">=0.23", extras = ["python"]}

@@ -1,9 +1,7 @@
 import json
 
-import pytest
-
+from exammaker.json import dumps, loads
 from exammaker.question import QuestionType
-from exammaker.json import dump, dumps, load, loads
 
 JSON_OBJ = {
     "i": 1,

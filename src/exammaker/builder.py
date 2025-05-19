@@ -1,6 +1,6 @@
 import random
 
-from exammaker.exam import Exam
+from .exam import Exam
 
 
 class ExamBuilder:
