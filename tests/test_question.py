@@ -1,6 +1,9 @@
+import re
 from math import sqrt
 
+import pytest
 from PIL import Image, ImageChops
+from marshmallow import ValidationError
 
 from exammaker.question import QuestionSchema
 
@@ -10,6 +13,9 @@ INPUT_JSON_1 = ("{\n"
                 "    \"text\": \"A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  "
                 "What is its final velocity?\",\n"
                 "    \"answer\": \"sqrt(d*g)\",\n"
+                "    \"alt_answers\": [],\n"
+                "    \"all_of_the_above\": false,\n"
+                "    \"none_of_the_above\": false,\n"
                 "    \"variables\": [\n"
                 "        [\n"
                 "            \"g\",\n"
@@ -33,6 +39,9 @@ INPUT_JSON_2 = ("{\n"
                 "    \"text\": \"A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  "
                 "What is its final kinetic energy?\",\n"
                 "    \"answer\": \"m1 * d * g / 2\",\n"
+                "    \"alt_answers\": [],\n"
+                "    \"all_of_the_above\": false,\n"
+                "    \"none_of_the_above\": false,\n"
                 "    \"variables\": [\n"
                 "        [\n"
                 "            \"g\",\n"
@@ -50,6 +59,56 @@ INPUT_JSON_2 = ("{\n"
                 "    \"image_file\": \"x.png\"\n"
                 "}")
 
+INPUT_JSON_3 = ("{\n"
+                "    \"height\": 100.0,\n"
+                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
+                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
+                "    \"answer\": \"'None of the above'\",\n"
+                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
+                "    \"all_of_the_above\": true,\n"
+                "    \"none_of_the_above\": true,\n"
+                "    \"variables\": [\n"
+                "    ],\n"
+                "    \"image\": \"\"\n"
+                "}")
+
+INPUT_JSON_4 = ("{\n"
+                "    \"height\": 100.0,\n"
+                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
+                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
+                "    \"answer\": \"'Why'\",\n"
+                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
+                "    \"all_of_the_above\": false,\n"
+                "    \"none_of_the_above\": false,\n"
+                "    \"variables\": [\n"
+                "    ],\n"
+                "    \"image\": \"\"\n"
+                "}")
+BAD_JSON_1 = ("{\n"
+                "    \"height\": 100.0,\n"
+                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
+                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
+                "    \"answer\": \"'None of the above'\",\n"
+                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
+                "    \"all_of_the_above\": true,\n"
+                "    \"none_of_the_above\": true,\n"
+                "    \"variables\": [\n"
+                "    ],\n"
+                "    \"image\": \"NOT A PIL IMAGE\"\n"
+                "}")
+
+BAD_JSON_2 = ("{\n"
+                "    \"height\": \"Not a Number\",\n"
+                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
+                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
+                "    \"answer\": \"'None of the above'\",\n"
+                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
+                "    \"all_of_the_above\": true,\n"
+                "    \"none_of_the_above\": true,\n"
+                "    \"variables\": [\n"
+                "    ],\n"
+                "    \"image\": \"\"\n"
+                "}")
 
 def test_question():
 
@@ -107,3 +166,56 @@ def test_question_with_image():
     assert q2.answer == q.answer
     assert q2.variables == q.variables
     assert not ImageChops.difference(q2.image, q.image).getbbox()
+
+def test_multiple_choice():
+
+    schema = QuestionSchema()
+
+    q = schema.loads(INPUT_JSON_3)
+
+    assert q is not None
+
+    q.format_question()
+
+    assert re.search(r'[ABC]\) Who', q.formatted_text)
+    assert re.search(r'[ABC]\) What', q.formatted_text)
+    assert re.search(r'[ABC]\) Where', q.formatted_text)
+    assert re.search(r'D\) All of the above', q.formatted_text)
+    assert re.search(r'E\) None of the above', q.formatted_text)
+    assert q.formatted_answer == "'None of the above' = None of the above (E)"
+
+    q = schema.loads(INPUT_JSON_4)
+
+    assert q is not None
+
+    q.format_question()
+
+    assert re.search(r'[ABCD]\) Who', q.formatted_text)
+    assert re.search(r'[ABCD]\) What', q.formatted_text)
+    assert re.search(r'[ABCD]\) Where', q.formatted_text)
+    assert re.search(r'[ABCD]\) Why', q.formatted_text)
+    assert re.search(r"'Why' = Why \([ABCD]\)", q.formatted_answer)
+
+
+def test_bad_input():
+
+    schema = QuestionSchema()
+
+    with pytest.raises(ValidationError) as e_info:
+        schema.loads(BAD_JSON_1)
+
+    with pytest.raises(ValidationError) as e_info:
+        schema.loads(BAD_JSON_2)
+
+    q = schema.loads(INPUT_JSON_1)
+    assert q is not None
+
+    q.image = "THIS IS NOT A PIL IMAGE"
+    with pytest.raises(ValidationError) as e_info:
+        schema.dumps(q)
+
+    q.image = ""
+    q.variables.append(['badvar', 'unknown_func()'])
+
+    with pytest.raises(Exception) as e_info:
+        q.format_question()

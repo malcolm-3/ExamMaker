@@ -1,6 +1,7 @@
 import json
+from io import StringIO
 
-from exammaker.json import dumps, loads
+from exammaker.json import dumps, loads, dump, load
 from exammaker.question import QuestionType
 
 JSON_OBJ = {
@@ -16,6 +17,18 @@ def test_dumps_loads() -> None:
     s = dumps(JSON_OBJ)
     assert s is not None
     o = loads(s)
+    assert o is not None
+    assert o == JSON_OBJ
+
+
+def test_dump_load() -> None:
+
+    outfile = StringIO()
+    dump(JSON_OBJ, outfile)
+    s = outfile.getvalue()
+    assert s is not None
+    infile = StringIO(s)
+    o = load(infile)
     assert o is not None
     assert o == JSON_OBJ
 

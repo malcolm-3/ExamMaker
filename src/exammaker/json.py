@@ -23,7 +23,7 @@ def _generate_enum_encoder(existing_encoder_cls):
         def default(self, obj):
             if type(obj) in PUBLIC_ENUMS.values():
                 return {"__enum__": str(obj)}
-            return super().default(obj)
+            return super().default(obj)  # pragma: no cover
 
     return EnumEncoder
 
