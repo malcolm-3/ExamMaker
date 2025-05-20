@@ -59,7 +59,8 @@ ruff = ">=0.2.0"
 [build-system]
 requires = [
     "poetry-core>=1.0.0",
-    "click"
+    "click",
+    "poetry-bumpversion"
 ]
 build-backend = "poetry.core.masonry.api"
 
@@ -133,3 +134,7 @@ disallow_any_unimported = true
 
 [tool.poetry.scripts]
 exammaker = 'exammaker.cli:cli'
+
+[tool.poetry_bumpversion.file."src/exammaker/__init__.py"]
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
