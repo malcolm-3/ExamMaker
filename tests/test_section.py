@@ -205,9 +205,6 @@ def test_section():
     for section in section_list:
         section.format_questions()
 
-
-    with open("sections.json", "w") as fh:
-        fh.write(INPUT_JSON_2)
     section_list = schema.loads(INPUT_JSON_2, many=True)
 
     assert section_list is not None

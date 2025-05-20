@@ -4,7 +4,8 @@ dependencies = [
     "fpdf2~=2.8",
     "marshmallow~=4.0",
     "Pillow~=11.2",
-    "plusminus"
+    "plusminus",
+    "click"
 ]
 
 [tool.poetry]
@@ -56,7 +57,10 @@ python-kacl = "*"
 ruff = ">=0.2.0"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = [
+    "poetry-core>=1.0.0",
+    "click"
+]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
@@ -126,3 +130,6 @@ disallow_any_unimported = true
 #   "tests/my_thing/test_my_thing",
 # ]
 # disallow_untyped_defs = false
+
+[tool.poetry.scripts]
+exammaker = 'exammaker.cli:cli'

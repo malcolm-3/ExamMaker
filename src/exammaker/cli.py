@@ -6,7 +6,9 @@ from .builder import ExamBuilder
 from .section import ExamSectionSchema
 
 
-@click.command(help="""
+@click.command(
+    name="exammaker",
+    help="""
 Generate multiple versions of an exam from a set of front pages, back pages, and questions.
 
 The front and back pages should be in HTML format.
@@ -17,22 +19,33 @@ somewhere so that you can tell from the printed exam what
 the correct key to use.
 
 \b
-The questions.json file is a list of Questions.
+The question_section_json file is a JSON list of ExamSections.
+Each Exam Section contains an optional "title" field and a
+"question_list" field, which is a JSON list of Questions.
 Each Question has the following properties
-    qtype        currently this can only be "SHORT_ANSWER"
-    text         the str.format templated question text
-    answer       a plusminus ArithmeticParse string used to 
-                 calculate the answer from the variables
-    variables    a list of lists of name/value strings
-                 - the name is the variable name used both
-                   a plusminus variable and as a str.format
-                   string for the question text
-                 - the value is a plusminus expression which
-                   can include the "choose" function that randomly
-                   picks one of its arguments.
-    image_file   the path to an image file for the question (optional)
-    height       the vertical height, in points, to be used for
-                 the question
+    qtype.............."SHORT_ANSWER", or "MULTIPLE_CHOICE"
+    text...............the str.format templated question text
+    answer.............a plusminus ArithmeticParse string used to 
+                       calculate the answer from the variables
+    alt_answers........alternative answers for multiple choice 
+                       questions, which can be plusminus strings
+                       including the variable "answer" which is
+                       the specific answer value for this version
+                       of the exam
+    all_of_the_above...if true include "All of the above" as
+                       a possible answer
+    none_of_the_above..if true include "None of the above" as
+                       a possible answer
+    variables..........a list of lists of name/value strings
+                       - the name is the variable name used both
+                         a plusminus variable and as a str.format
+                         string for the question text
+                       - the value is a plusminus expression which
+                         can include the "choose" function that randomly
+                         picks one of its arguments.
+    image_file.........the path to an image file for the question (optional)
+    height.............the vertical height, in points, to be used for
+                       the question
                  
 """)
 @click.option("-f",
@@ -63,7 +76,7 @@ def cli(title: str,
         output_root: str, ):
 
     if not output_root:
-        output_root = title
+        output_root = title  # pragma: no cover
 
     front_pages = []
     for page_file in front_page:

@@ -3,7 +3,7 @@
         "title": "Short Answer",
         "question_list": [
             {
-                "height": 100.0,
+                "height": 180.0,
                 "qtype": "SHORT_ANSWER",
                 "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  What is its final velocity?",
                 "answer": "sqrt(d*g)",
@@ -27,7 +27,7 @@
                 "image": ""
             },
             {
-                "height": 100.0,
+                "height": 180.0,
                 "qtype": "SHORT_ANSWER",
                 "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  What is its final kinetic energy?",
                 "answer": "m1 * d * g / 2",
