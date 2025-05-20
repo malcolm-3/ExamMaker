@@ -3,12 +3,12 @@ import json
 from .question import QuestionType
 
 PUBLIC_ENUMS = {
-    'QuestionType': QuestionType,
+    "QuestionType": QuestionType,
     # ...
 }
 
-ENCODER_KWARG = 'cls'
-DECODER_KWARG = 'object_hook'
+ENCODER_KWARG = "cls"
+DECODER_KWARG = "object_hook"
 
 # This code provides a generic mechanism for enum serialization/deserialization
 # The JSON might be "prettier" and/or more easily manually generated with a
@@ -30,6 +30,7 @@ def _generate_enum_encoder(existing_encoder_cls):
 
 def _generate_object_hook(existing_object_hook):
     if existing_object_hook is None:
+
         def existing_object_hook(d):
             return d
 

@@ -4,14 +4,14 @@ TOP_SKIP = 20
 
 
 class Exam:
-
-    def __init__(self,
-                 title="Exam",
-                 variables=None,
-                 front_pages = (),
-                 sections = (),
-                 back_pages =(),
-                 ):
+    def __init__(
+        self,
+        title="Exam",
+        variables=None,
+        front_pages=(),
+        sections=(),
+        back_pages=(),
+    ):
         self._title = title
         if variables is None:
             variables = {}  # pragma: no cover
@@ -26,7 +26,11 @@ class Exam:
         class PDF(FPDF):
             def header(self):
                 if self.pages_count > 1:
-                    self.cell(w=0, text=header_string.format(page=self.pages_count), align=Align.R)
+                    self.cell(
+                        w=0,
+                        text=header_string.format(page=self.pages_count),
+                        align=Align.R,
+                    )
 
         pdf = PDF()
         page_height = pdf.eph
@@ -46,13 +50,13 @@ class Exam:
                         pdf.add_page()
                         pdf.set_y(TOP_SKIP)
                         ystart = pdf.get_y()
-                    pdf.write_html(f'{iq+1}. {question.formatted_text}')
+                    pdf.write_html(f"{iq + 1}. {question.formatted_text}")
                     if question.image:
                         kwargs = {}
                         if question.image.height > 200:
-                            kwargs['h'] = 50  # pragma: no cover
+                            kwargs["h"] = 50  # pragma: no cover
                         elif question.image.width > 240:
-                            kwargs['w'] = 60  # pragma: no cover
+                            kwargs["w"] = 60  # pragma: no cover
                         pdf.image(question.image, **kwargs)
                     if print_key:
                         pdf.set_text_color(255, 0, 0)

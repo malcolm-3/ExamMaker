@@ -4,7 +4,6 @@ import math
 
 
 class ExamMakerParser(ArithmeticParser):
-
     def customize(self):
         super().customize()
 
@@ -17,6 +16,6 @@ class ExamMakerParser(ArithmeticParser):
         def sqrt(value):
             return math.sqrt(value)
 
-        self.add_function('choose',..., choose)
-        self.add_function('select',..., select)
-        self.add_function('sqrt',1, sqrt)
+        self.add_function("choose", ..., choose)
+        self.add_function("select", ..., select)
+        self.add_function("sqrt", 1, sqrt)

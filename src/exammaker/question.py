@@ -12,9 +12,9 @@ from .parser import ExamMakerParser
 
 
 class QuestionType(Enum):
-    TRUE_FALSE = 'True/False'
-    SHORT_ANSWER = 'Short Answer'
-    MULTIPLE_CHOICE = 'Multiple Choice'
+    TRUE_FALSE = "True/False"
+    SHORT_ANSWER = "Short Answer"
+    MULTIPLE_CHOICE = "Multiple Choice"
 
 
 DEFAULT_HEIGHT = {
@@ -24,23 +24,23 @@ DEFAULT_HEIGHT = {
 }
 
 
-LETTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+LETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 class Question:
-
-    def __init__(self,
-                 qtype: QuestionType = QuestionType.SHORT_ANSWER,
-                 text: str = "",
-                 answer: str = "",
-                 alt_answers: Optional[List[str]] = None,
-                 all_of_the_above: bool = False,
-                 none_of_the_above: bool = False,
-                 variables: Optional[List[List[str]]] = None,
-                 height: Optional[float] = None,
-                 image: Optional[Image.Image] = None,
-                 image_file: Optional[Path] = None,
-                 ):
+    def __init__(
+        self,
+        qtype: QuestionType = QuestionType.SHORT_ANSWER,
+        text: str = "",
+        answer: str = "",
+        alt_answers: Optional[List[str]] = None,
+        all_of_the_above: bool = False,
+        none_of_the_above: bool = False,
+        variables: Optional[List[List[str]]] = None,
+        height: Optional[float] = None,
+        image: Optional[Image.Image] = None,
+        image_file: Optional[Path] = None,
+    ):
         if variables is None:
             variables = {}  # pragma: no cover
         if alt_answers is None:
@@ -78,30 +78,34 @@ class Question:
             self._clear_formatting()
             parser = ExamMakerParser()
             for varnam, varexp in self.variables:
-                value = parser.evaluate(f'{varnam} = {varexp}')
+                value = parser.evaluate(f"{varnam} = {varexp}")
                 self._formatted_variables[varnam] = value
-            answer_value = parser.evaluate(f'answer = {self.answer}')
+            answer_value = parser.evaluate(f"answer = {self.answer}")
             for alt_answer in self.alt_answers:
                 self.formatted_alt_answers.append(parser.evaluate(alt_answer))
-            self.formatted_text = self.text.format(**global_variables, **self._formatted_variables)
+            self.formatted_text = self.text.format(
+                **global_variables, **self._formatted_variables
+            )
             self.formatted_answer = " = ".join([self.answer, str(answer_value)])
             if self.qtype == QuestionType.MULTIPLE_CHOICE:
                 answer_list = []
-                if answer_value not in ('All of the above', 'None of the above'):
+                if answer_value not in ("All of the above", "None of the above"):
                     answer_list.append(answer_value)
                 answer_list.extend(self.formatted_alt_answers)
                 random.shuffle(answer_list)
                 if self.all_of_the_above:
-                    answer_list.append('All of the above')
+                    answer_list.append("All of the above")
                 if self.none_of_the_above:
-                    answer_list.append('None of the above')
+                    answer_list.append("None of the above")
                 for i, answer in enumerate(answer_list):
-                    self.formatted_text += f'<br>{LETTER[i]}) {answer}'
+                    self.formatted_text += f"<br>{LETTER[i]}) {answer}"
                     if answer == answer_value:
-                        self.formatted_answer += f' ({LETTER[i]})'
+                        self.formatted_answer += f" ({LETTER[i]})"
 
         except Exception as e:
-            raise Exception('Exception encountered with question "'+self.text+'"') from e
+            raise Exception(
+                'Exception encountered with question "' + self.text + '"'
+            ) from e
 
 
 class ImageField(fields.Dict):
@@ -109,12 +113,12 @@ class ImageField(fields.Dict):
         if value is None:
             return ""
         if not isinstance(value, Image.Image):
-            raise ValidationError('Image is not of type PIL.Image.Image')
+            raise ValidationError("Image is not of type PIL.Image.Image")
         d = {
-            'width': value.size[0],
-            'height': value.size[1],
-            'mode': value.mode,
-            'data': b64encode(value.tobytes()).decode()
+            "width": value.size[0],
+            "height": value.size[1],
+            "mode": value.mode,
+            "data": b64encode(value.tobytes()).decode(),
         }
         return json.dumps(d)
 
@@ -123,10 +127,10 @@ class ImageField(fields.Dict):
             return None
         try:
             obj = json.loads(value)
-            width = obj['width']
-            height = obj['height']
-            bdata = b64decode(obj['data'].encode())
-            mode = obj['mode']
+            width = obj["width"]
+            height = obj["height"]
+            bdata = b64decode(obj["data"].encode())
+            mode = obj["mode"]
             return Image.frombytes(mode, (width, height), bdata)
         except Exception as e:
             raise ValidationError(str(e))
@@ -147,4 +151,3 @@ class QuestionSchema(Schema):
     @post_load
     def make_question(self, data, **_):
         return Question(**data)
-

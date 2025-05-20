@@ -8,10 +8,10 @@ from .question import Question, QuestionSchema
 
 
 class ExamSection:
-
-    def __init__(self,
-                 title: Optional[str] = None,
-                 question_list: Optional[List[Question]] = None,
+    def __init__(
+        self,
+        title: Optional[str] = None,
+        question_list: Optional[List[Question]] = None,
     ):
         self.title = title
         if question_list is None:

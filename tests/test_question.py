@@ -7,111 +7,123 @@ from marshmallow import ValidationError
 
 from exammaker.question import QuestionSchema
 
-INPUT_JSON_1 = ("{\n"
-                "    \"height\": 100.0,\n"
-                "    \"qtype\": \"SHORT_ANSWER\",\n"
-                "    \"text\": \"A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  "
-                "What is its final velocity?\",\n"
-                "    \"answer\": \"sqrt(d*g)\",\n"
-                "    \"alt_answers\": [],\n"
-                "    \"all_of_the_above\": false,\n"
-                "    \"none_of_the_above\": false,\n"
-                "    \"variables\": [\n"
-                "        [\n"
-                "            \"g\",\n"
-                "            \"9.8\"\n"
-                "        ],\n"
-                "        [\n"
-                "            \"m1\",\n"
-                "            \"choose(1,2,3)\"\n"
-                "        ],\n"
-                "        [\n"
-                "            \"d\",\n"
-                "            \"choose(11,12,13)\"\n"
-                "        ]\n"
-                "    ],\n"
-                "    \"image\": \"\"\n"
-                "}")
+INPUT_JSON_1 = (
+    "{\n"
+    '    "height": 100.0,\n'
+    '    "qtype": "SHORT_ANSWER",\n'
+    '    "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  '
+    'What is its final velocity?",\n'
+    '    "answer": "sqrt(d*g)",\n'
+    '    "alt_answers": [],\n'
+    '    "all_of_the_above": false,\n'
+    '    "none_of_the_above": false,\n'
+    '    "variables": [\n'
+    "        [\n"
+    '            "g",\n'
+    '            "9.8"\n'
+    "        ],\n"
+    "        [\n"
+    '            "m1",\n'
+    '            "choose(1,2,3)"\n'
+    "        ],\n"
+    "        [\n"
+    '            "d",\n'
+    '            "choose(11,12,13)"\n'
+    "        ]\n"
+    "    ],\n"
+    '    "image": ""\n'
+    "}"
+)
 
-INPUT_JSON_2 = ("{\n"
-                "    \"height\": 100.0,\n"
-                "    \"qtype\": \"SHORT_ANSWER\",\n"
-                "    \"text\": \"A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  "
-                "What is its final kinetic energy?\",\n"
-                "    \"answer\": \"m1 * d * g / 2\",\n"
-                "    \"alt_answers\": [],\n"
-                "    \"all_of_the_above\": false,\n"
-                "    \"none_of_the_above\": false,\n"
-                "    \"variables\": [\n"
-                "        [\n"
-                "            \"g\",\n"
-                "            \"9.8\"\n"
-                "        ],\n"
-                "        [\n"
-                "            \"m1\",\n"
-                "            \"choose(1,2,3)\"\n"
-                "        ],\n"
-                "        [\n"
-                "            \"d\",\n"
-                "            \"choose(11,12,13)\"\n"
-                "        ]\n"
-                "    ],\n"
-                "    \"image_file\": \"x.png\"\n"
-                "}")
+INPUT_JSON_2 = (
+    "{\n"
+    '    "height": 100.0,\n'
+    '    "qtype": "SHORT_ANSWER",\n'
+    '    "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  '
+    'What is its final kinetic energy?",\n'
+    '    "answer": "m1 * d * g / 2",\n'
+    '    "alt_answers": [],\n'
+    '    "all_of_the_above": false,\n'
+    '    "none_of_the_above": false,\n'
+    '    "variables": [\n'
+    "        [\n"
+    '            "g",\n'
+    '            "9.8"\n'
+    "        ],\n"
+    "        [\n"
+    '            "m1",\n'
+    '            "choose(1,2,3)"\n'
+    "        ],\n"
+    "        [\n"
+    '            "d",\n'
+    '            "choose(11,12,13)"\n'
+    "        ]\n"
+    "    ],\n"
+    '    "image_file": "x.png"\n'
+    "}"
+)
 
-INPUT_JSON_3 = ("{\n"
-                "    \"height\": 100.0,\n"
-                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
-                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
-                "    \"answer\": \"'None of the above'\",\n"
-                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
-                "    \"all_of_the_above\": true,\n"
-                "    \"none_of_the_above\": true,\n"
-                "    \"variables\": [\n"
-                "    ],\n"
-                "    \"image\": \"\"\n"
-                "}")
+INPUT_JSON_3 = (
+    "{\n"
+    '    "height": 100.0,\n'
+    '    "qtype": "MULTIPLE_CHOICE",\n'
+    '    "text": "Is it shorter to New York or by bus?",\n'
+    '    "answer": "\'None of the above\'",\n'
+    '    "alt_answers": ["\'Who\'", "\'What\'", "\'Where\'"],\n'
+    '    "all_of_the_above": true,\n'
+    '    "none_of_the_above": true,\n'
+    '    "variables": [\n'
+    "    ],\n"
+    '    "image": ""\n'
+    "}"
+)
 
-INPUT_JSON_4 = ("{\n"
-                "    \"height\": 100.0,\n"
-                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
-                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
-                "    \"answer\": \"'Why'\",\n"
-                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
-                "    \"all_of_the_above\": false,\n"
-                "    \"none_of_the_above\": false,\n"
-                "    \"variables\": [\n"
-                "    ],\n"
-                "    \"image\": \"\"\n"
-                "}")
-BAD_JSON_1 = ("{\n"
-                "    \"height\": 100.0,\n"
-                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
-                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
-                "    \"answer\": \"'None of the above'\",\n"
-                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
-                "    \"all_of_the_above\": true,\n"
-                "    \"none_of_the_above\": true,\n"
-                "    \"variables\": [\n"
-                "    ],\n"
-                "    \"image\": \"NOT A PIL IMAGE\"\n"
-                "}")
+INPUT_JSON_4 = (
+    "{\n"
+    '    "height": 100.0,\n'
+    '    "qtype": "MULTIPLE_CHOICE",\n'
+    '    "text": "Is it shorter to New York or by bus?",\n'
+    '    "answer": "\'Why\'",\n'
+    '    "alt_answers": ["\'Who\'", "\'What\'", "\'Where\'"],\n'
+    '    "all_of_the_above": false,\n'
+    '    "none_of_the_above": false,\n'
+    '    "variables": [\n'
+    "    ],\n"
+    '    "image": ""\n'
+    "}"
+)
+BAD_JSON_1 = (
+    "{\n"
+    '    "height": 100.0,\n'
+    '    "qtype": "MULTIPLE_CHOICE",\n'
+    '    "text": "Is it shorter to New York or by bus?",\n'
+    '    "answer": "\'None of the above\'",\n'
+    '    "alt_answers": ["\'Who\'", "\'What\'", "\'Where\'"],\n'
+    '    "all_of_the_above": true,\n'
+    '    "none_of_the_above": true,\n'
+    '    "variables": [\n'
+    "    ],\n"
+    '    "image": "NOT A PIL IMAGE"\n'
+    "}"
+)
 
-BAD_JSON_2 = ("{\n"
-                "    \"height\": \"Not a Number\",\n"
-                "    \"qtype\": \"MULTIPLE_CHOICE\",\n"
-                "    \"text\": \"Is it shorter to New York or by bus?\",\n"
-                "    \"answer\": \"'None of the above'\",\n"
-                "    \"alt_answers\": [\"'Who'\", \"'What'\", \"'Where'\"],\n"
-                "    \"all_of_the_above\": true,\n"
-                "    \"none_of_the_above\": true,\n"
-                "    \"variables\": [\n"
-                "    ],\n"
-                "    \"image\": \"\"\n"
-                "}")
+BAD_JSON_2 = (
+    "{\n"
+    '    "height": "Not a Number",\n'
+    '    "qtype": "MULTIPLE_CHOICE",\n'
+    '    "text": "Is it shorter to New York or by bus?",\n'
+    '    "answer": "\'None of the above\'",\n'
+    '    "alt_answers": ["\'Who\'", "\'What\'", "\'Where\'"],\n'
+    '    "all_of_the_above": true,\n'
+    '    "none_of_the_above": true,\n'
+    '    "variables": [\n'
+    "    ],\n"
+    '    "image": ""\n'
+    "}"
+)
+
 
 def test_question():
-
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_1)
@@ -121,19 +133,18 @@ def test_question():
 
     q.format_question()
 
-    g = q._formatted_variables['g']
-    m1 = q._formatted_variables['m1']
-    d = q._formatted_variables['d']
+    g = q._formatted_variables["g"]
+    m1 = q._formatted_variables["m1"]
+    d = q._formatted_variables["d"]
 
     assert g == 9.8
     assert m1 in (1, 2, 3)
     assert d in (11, 12, 13)
 
-    assert q.formatted_answer == f'{q.answer} = {sqrt(g * d)}'
+    assert q.formatted_answer == f"{q.answer} = {sqrt(g * d)}"
 
 
 def test_question_with_image():
-
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_2)
@@ -143,15 +154,15 @@ def test_question_with_image():
 
     q.format_question()
 
-    g = q._formatted_variables['g']
-    m1 = q._formatted_variables['m1']
-    d = q._formatted_variables['d']
+    g = q._formatted_variables["g"]
+    m1 = q._formatted_variables["m1"]
+    d = q._formatted_variables["d"]
 
     assert g == 9.8
     assert m1 in (1, 2, 3)
     assert d in (11, 12, 13)
 
-    assert q.formatted_answer == f'{q.answer} = {m1 * g * d / 2}'
+    assert q.formatted_answer == f"{q.answer} = {m1 * g * d / 2}"
 
     qjson = schema.dumps(q)
 
@@ -167,8 +178,8 @@ def test_question_with_image():
     assert q2.variables == q.variables
     assert not ImageChops.difference(q2.image, q.image).getbbox()
 
-def test_multiple_choice():
 
+def test_multiple_choice():
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_3)
@@ -177,11 +188,11 @@ def test_multiple_choice():
 
     q.format_question()
 
-    assert re.search(r'[ABC]\) Who', q.formatted_text)
-    assert re.search(r'[ABC]\) What', q.formatted_text)
-    assert re.search(r'[ABC]\) Where', q.formatted_text)
-    assert re.search(r'D\) All of the above', q.formatted_text)
-    assert re.search(r'E\) None of the above', q.formatted_text)
+    assert re.search(r"[ABC]\) Who", q.formatted_text)
+    assert re.search(r"[ABC]\) What", q.formatted_text)
+    assert re.search(r"[ABC]\) Where", q.formatted_text)
+    assert re.search(r"D\) All of the above", q.formatted_text)
+    assert re.search(r"E\) None of the above", q.formatted_text)
     assert q.formatted_answer == "'None of the above' = None of the above (E)"
 
     q = schema.loads(INPUT_JSON_4)
@@ -190,15 +201,14 @@ def test_multiple_choice():
 
     q.format_question()
 
-    assert re.search(r'[ABCD]\) Who', q.formatted_text)
-    assert re.search(r'[ABCD]\) What', q.formatted_text)
-    assert re.search(r'[ABCD]\) Where', q.formatted_text)
-    assert re.search(r'[ABCD]\) Why', q.formatted_text)
+    assert re.search(r"[ABCD]\) Who", q.formatted_text)
+    assert re.search(r"[ABCD]\) What", q.formatted_text)
+    assert re.search(r"[ABCD]\) Where", q.formatted_text)
+    assert re.search(r"[ABCD]\) Why", q.formatted_text)
     assert re.search(r"'Why' = Why \([ABCD]\)", q.formatted_answer)
 
 
 def test_bad_input():
-
     schema = QuestionSchema()
 
     with pytest.raises(ValidationError) as e_info:
@@ -215,7 +225,7 @@ def test_bad_input():
         schema.dumps(q)
 
     q.image = ""
-    q.variables.append(['badvar', 'unknown_func()'])
+    q.variables.append(["badvar", "unknown_func()"])
 
     with pytest.raises(Exception) as e_info:
         q.format_question()

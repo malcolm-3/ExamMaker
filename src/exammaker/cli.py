@@ -25,9 +25,9 @@ Each Exam Section contains an optional "title" field and a
 Each Question has the following properties
     qtype.............."SHORT_ANSWER", or "MULTIPLE_CHOICE"
     text...............the str.format templated question text
-    answer.............a plusminus ArithmeticParse string used to 
+    answer.............a plusminus ArithmeticParse string used to
                        calculate the answer from the variables
-    alt_answers........alternative answers for multiple choice 
+    alt_answers........alternative answers for multiple choice
                        questions, which can be plusminus strings
                        including the variable "answer" which is
                        the specific answer value for this version
@@ -46,63 +46,73 @@ Each Question has the following properties
     image_file.........the path to an image file for the question (optional)
     height.............the vertical height, in points, to be used for
                        the question
-                 
-""")
-@click.option("-f",
-              "--front-page",
-              multiple=True,
-              type=click.Path(exists=True),
-              help='HTML format template file for front pages, repeat for multiple pages.',
-              )
-@click.option("-b",
-              "--back-page",
-              multiple=True,
-              type=click.Path(exists=True),
-              help='HTML format template file for back pages, repeat for multiple pages.',
-              )
-@click.option("-o",
-              "--output-root",
-              type=str,
-              help='Root of output file names (default is to use the tittle)',
-              )
-@click.argument('title', type=str, required=True)
-@click.argument('nvers', type=int, required=True)
-@click.argument('question_section_json', type=click.Path(exists=True), required=True)
-def cli(title: str,
-        nvers: int,
-        question_section_json: str,
-        front_page: List[str],
-        back_page: List[str],
-        output_root: str, ):
 
+""",
+)
+@click.option(
+    "-f",
+    "--front-page",
+    multiple=True,
+    type=click.Path(exists=True),
+    help="HTML format template file for front pages, repeat for multiple pages.",
+)
+@click.option(
+    "-b",
+    "--back-page",
+    multiple=True,
+    type=click.Path(exists=True),
+    help="HTML format template file for back pages, repeat for multiple pages.",
+)
+@click.option(
+    "-o",
+    "--output-root",
+    type=str,
+    help="Root of output file names (default is to use the tittle)",
+)
+@click.argument("title", type=str, required=True)
+@click.argument("nvers", type=int, required=True)
+@click.argument("question_section_json", type=click.Path(exists=True), required=True)
+def cli(
+    title: str,
+    nvers: int,
+    question_section_json: str,
+    front_page: List[str],
+    back_page: List[str],
+    output_root: str,
+):
     if not output_root:
         output_root = title  # pragma: no cover
 
     front_pages = []
     for page_file in front_page:
-        with open(page_file, 'r') as fh:
+        with open(page_file, "r") as fh:
             front_pages.append(fh.read())
 
     back_pages = []
     for page_file in back_page:
-        with open(page_file, 'r') as fh:
+        with open(page_file, "r") as fh:
             back_pages.append(fh.read())
 
-    with open(question_section_json, 'r') as fh:
+    with open(question_section_json, "r") as fh:
         sections = ExamSectionSchema().loads(fh.read(), many=True)
 
-    builder = ExamBuilder(title, variables={'title': title},
-                          front_pages=front_pages, sections=sections, back_pages=back_pages)
+    builder = ExamBuilder(
+        title,
+        variables={"title": title},
+        front_pages=front_pages,
+        sections=sections,
+        back_pages=back_pages,
+    )
 
     while nvers > 0:
         version_str, exam, exam_key = builder.generate_exam()
 
-        exam_output_file = f'{output_root}.{version_str}.exam.pdf'
-        with open(exam_output_file, 'wb') as fh:
+        exam_output_file = f"{output_root}.{version_str}.exam.pdf"
+        with open(exam_output_file, "wb") as fh:
             fh.write(exam)
 
-        key_output_file = f'{output_root}.{version_str}.key.pdf'
-        with open(key_output_file, 'wb') as fh:
+        key_output_file = f"{output_root}.{version_str}.key.pdf"
+        with open(key_output_file, "wb") as fh:
             fh.write(exam_key)
 
         nvers -= 1

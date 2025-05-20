@@ -18,9 +18,9 @@ EXPECTED_HELP = """Usage: exammaker [OPTIONS] TITLE NVERS QUESTION_SECTION_JSON
   Each Question has the following properties
       qtype.............."SHORT_ANSWER", or "MULTIPLE_CHOICE"
       text...............the str.format templated question text
-      answer.............a plusminus ArithmeticParse string used to 
+      answer.............a plusminus ArithmeticParse string used to
                          calculate the answer from the variables
-      alt_answers........alternative answers for multiple choice 
+      alt_answers........alternative answers for multiple choice
                          questions, which can be plusminus strings
                          including the variable "answer" which is
                          the specific answer value for this version
@@ -39,7 +39,7 @@ EXPECTED_HELP = """Usage: exammaker [OPTIONS] TITLE NVERS QUESTION_SECTION_JSON
       image_file.........the path to an image file for the question (optional)
       height.............the vertical height, in points, to be used for
                          the question
-                   
+
 
 Options:
   -f, --front-page PATH   HTML format template file for front pages, repeat for
@@ -55,23 +55,25 @@ Options:
 def test_cli(tmpdir):
     runner = CliRunner()
 
-    result = runner.invoke(
-        cli,
-        ["--help"]
-    )
+    result = runner.invoke(cli, ["--help"])
     assert result.exit_code == 0
     assert result.output == EXPECTED_HELP
 
     result = runner.invoke(
         cli,
-        ["-f", "front1.html",
-         "-f", "front2.html",
-         "-o", tmpdir.join("TestExam"),
-         "-b", "back.html",
-         "Test Exam",
-         "2",
-         "sections.json",
-         ]
+        [
+            "-f",
+            "front1.html",
+            "-f",
+            "front2.html",
+            "-o",
+            tmpdir.join("TestExam"),
+            "-b",
+            "back.html",
+            "Test Exam",
+            "2",
+            "sections.json",
+        ],
     )
     assert result.exit_code == 0
     assert tmpdir.join("TestExam.a.exam.pdf").exists()

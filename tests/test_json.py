@@ -9,7 +9,7 @@ JSON_OBJ = {
     "f": 1.1,
     "s": "abc",
     "l": ["a", "b", "c"],
-    "e": QuestionType.SHORT_ANSWER
+    "e": QuestionType.SHORT_ANSWER,
 }
 
 
@@ -22,7 +22,6 @@ def test_dumps_loads() -> None:
 
 
 def test_dump_load() -> None:
-
     outfile = StringIO()
     dump(JSON_OBJ, outfile)
     s = outfile.getvalue()
