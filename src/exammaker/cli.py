@@ -1,4 +1,4 @@
-from typing import List
+import pathlib
 
 import click
 
@@ -9,7 +9,8 @@ from .section import ExamSectionSchema
 @click.command(
     name="exammaker",
     help="""
-Generate multiple versions of an exam from a set of front pages, back pages, and questions.
+Generate multiple versions of an exam from a set of front pages, back pages,
+and questions.
 
 The front and back pages should be in HTML format.
 They can contain format-string templated variables.
@@ -72,12 +73,12 @@ Each Question has the following properties
 @click.argument("title", type=str, required=True)
 @click.argument("nvers", type=int, required=True)
 @click.argument("question_section_json", type=click.Path(exists=True), required=True)
-def cli(
+def cli(  # noqa: PLR0913
     title: str,
     nvers: int,
     question_section_json: str,
-    front_page: List[str],
-    back_page: List[str],
+    front_page: list[str],
+    back_page: list[str],
     output_root: str,
 ):
     if not output_root:
@@ -85,15 +86,15 @@ def cli(
 
     front_pages = []
     for page_file in front_page:
-        with open(page_file, "r") as fh:
+        with pathlib.Path(page_file).open("r") as fh:
             front_pages.append(fh.read())
 
     back_pages = []
     for page_file in back_page:
-        with open(page_file, "r") as fh:
+        with pathlib.Path(page_file).open("r") as fh:
             back_pages.append(fh.read())
 
-    with open(question_section_json, "r") as fh:
+    with pathlib.Path(question_section_json).open("r") as fh:
         sections = ExamSectionSchema().loads(fh.read(), many=True)
 
     builder = ExamBuilder(
@@ -108,11 +109,11 @@ def cli(
         version_str, exam, exam_key = builder.generate_exam()
 
         exam_output_file = f"{output_root}.{version_str}.exam.pdf"
-        with open(exam_output_file, "wb") as fh:
+        with pathlib.Path(exam_output_file).open("wb") as fh:
             fh.write(exam)
 
         key_output_file = f"{output_root}.{version_str}.key.pdf"
-        with open(key_output_file, "wb") as fh:
+        with pathlib.Path(key_output_file).open("wb") as fh:
             fh.write(exam_key)
 
         nvers -= 1

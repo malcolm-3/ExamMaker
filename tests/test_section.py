@@ -216,5 +216,4 @@ def test_section():
         for question in section.question_list:
             assert question.formatted_text is not None
             assert question.formatted_answer is not None
-        saved_question_list = list(section.question_list)
         section.shuffle()

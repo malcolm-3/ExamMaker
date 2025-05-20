@@ -1,6 +1,7 @@
-from plusminus import ArithmeticParser
-import random
 import math
+import random
+
+from plusminus import ArithmeticParser
 
 
 class ExamMakerParser(ArithmeticParser):
@@ -8,7 +9,7 @@ class ExamMakerParser(ArithmeticParser):
         super().customize()
 
         def choose(*values):
-            return random.choice(values)
+            return random.choice(values)  # noqa: S311
 
         def select(i, *values):
             return values[i]

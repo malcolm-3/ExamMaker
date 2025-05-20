@@ -3,7 +3,7 @@ import random
 from base64 import b64encode, b64decode
 from enum import Enum
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 
 from PIL import Image
 from marshmallow import Schema, fields, post_load, ValidationError
@@ -27,16 +27,21 @@ DEFAULT_HEIGHT = {
 LETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
+class QuestionException(Exception):
+    pass
+
+
 class Question:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
+        *,
         qtype: QuestionType = QuestionType.SHORT_ANSWER,
         text: str = "",
         answer: str = "",
-        alt_answers: Optional[List[str]] = None,
+        alt_answers: Optional[list[str]] = None,
         all_of_the_above: bool = False,
         none_of_the_above: bool = False,
-        variables: Optional[List[List[str]]] = None,
+        variables: Optional[list[list[str]]] = None,
         height: Optional[float] = None,
         image: Optional[Image.Image] = None,
         image_file: Optional[Path] = None,
@@ -84,32 +89,36 @@ class Question:
             for alt_answer in self.alt_answers:
                 self.formatted_alt_answers.append(parser.evaluate(alt_answer))
             self.formatted_text = self.text.format(
-                **global_variables, **self._formatted_variables
+                **global_variables,
+                **self._formatted_variables,
             )
             self.formatted_answer = " = ".join([self.answer, str(answer_value)])
             if self.qtype == QuestionType.MULTIPLE_CHOICE:
-                answer_list = []
-                if answer_value not in ("All of the above", "None of the above"):
-                    answer_list.append(answer_value)
-                answer_list.extend(self.formatted_alt_answers)
-                random.shuffle(answer_list)
-                if self.all_of_the_above:
-                    answer_list.append("All of the above")
-                if self.none_of_the_above:
-                    answer_list.append("None of the above")
-                for i, answer in enumerate(answer_list):
-                    self.formatted_text += f"<br>{LETTER[i]}) {answer}"
-                    if answer == answer_value:
-                        self.formatted_answer += f" ({LETTER[i]})"
+                self._multiple_choice_mods(answer_value)
 
         except Exception as e:
-            raise Exception(
+            raise QuestionException(
                 'Exception encountered with question "' + self.text + '"'
             ) from e
 
+    def _multiple_choice_mods(self, answer_value):
+        answer_list = []
+        if answer_value not in ("All of the above", "None of the above"):
+            answer_list.append(answer_value)
+        answer_list.extend(self.formatted_alt_answers)
+        random.shuffle(answer_list)
+        if self.all_of_the_above:
+            answer_list.append("All of the above")
+        if self.none_of_the_above:
+            answer_list.append("None of the above")
+        for i, answer in enumerate(answer_list):
+            self.formatted_text += f"<br>{LETTER[i]}) {answer}"
+            if answer == answer_value:
+                self.formatted_answer += f" ({LETTER[i]})"
+
 
 class ImageField(fields.Dict):
-    def _serialize(self, value, attr, obj, **kwargs):
+    def _serialize(self, value, *_, **__):
         if value is None:
             return ""
         if not isinstance(value, Image.Image):
@@ -122,7 +131,7 @@ class ImageField(fields.Dict):
         }
         return json.dumps(d)
 
-    def _deserialize(self, value, attr, data, **kwargs):
+    def _deserialize(self, value, *_, **__):
         if not value:
             return None
         try:

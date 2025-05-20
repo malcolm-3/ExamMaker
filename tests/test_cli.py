@@ -40,7 +40,6 @@ EXPECTED_HELP = """Usage: exammaker [OPTIONS] TITLE NVERS QUESTION_SECTION_JSON
       height.............the vertical height, in points, to be used for
                          the question
 
-
 Options:
   -f, --front-page PATH   HTML format template file for front pages, repeat for
                           multiple pages.
