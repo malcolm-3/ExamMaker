@@ -3,7 +3,7 @@ from typing import List
 import click
 
 from .builder import ExamBuilder
-from .question import QuestionSchema
+from .section import ExamSectionSchema
 
 
 @click.command(help="""
@@ -54,13 +54,13 @@ Each Question has the following properties
               )
 @click.argument('title', type=str, required=True)
 @click.argument('nvers', type=int, required=True)
-@click.argument('question_json', type=click.Path(exists=True), required=True)
+@click.argument('question_section_json', type=click.Path(exists=True), required=True)
 def cli(title: str,
         nvers: int,
-        question_json: str,
+        question_section_json: str,
         front_page: List[str],
         back_page: List[str],
-        output_root: str,):
+        output_root: str, ):
 
     if not output_root:
         output_root = title
@@ -75,7 +75,7 @@ def cli(title: str,
         with open(page_file, 'r') as fh:
             back_pages.append(fh.read())
 
-    with open(question_json, 'r') as fh:
+    with open(question_section_json, 'r') as fh:
         sections = ExamSectionSchema().loads(fh.read(), many=True)
 
     builder = ExamBuilder(title, variables={'title': title},
