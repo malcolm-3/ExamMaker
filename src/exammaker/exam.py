@@ -9,15 +9,15 @@ class Exam:
                  title="Exam",
                  variables=None,
                  front_pages = (),
-                 question_list = (),
+                 sections = (),
                  back_pages =(),
                  ):
         self._title = title
         if variables is None:
-            variables = {}
+            variables = {}  # pragma: no cover
         self._variables = variables
         self._front_pages = front_pages
-        self._question_list = question_list
+        self._sections = sections
         self._back_pages = back_pages
 
     def print_exam(self, print_key=False):
@@ -34,30 +34,33 @@ class Exam:
             pdf.add_page()
             html = page.format(**self._variables)
             pdf.write_html(html)
-        if self._question_list:
+        for section in self._sections:
             pdf.add_page()
-            pdf.set_y(TOP_SKIP)
-            for iq, question in enumerate(self._question_list):
-                ystart = pdf.get_y()
-                if ystart + question.height > page_height:
-                    pdf.add_page()
-                    pdf.set_y(TOP_SKIP)
+            if section.title:
+                pdf.write_html(section.title)
+            if section.question_list:
+                pdf.set_y(TOP_SKIP)
+                for iq, question in enumerate(section.question_list):
                     ystart = pdf.get_y()
-                pdf.write_html(f'{iq+1}. {question.formatted_text}')
-                if question.image:
-                    kwargs = {}
-                    if question.image.height > 200:
-                        kwargs['h'] = 50
-                    elif question.image.width > 240:
-                        kwargs['w'] = 60
-                    pdf.image(question.image, **kwargs)
-                if print_key:
-                    pdf.set_text_color(255, 0, 0)
-                    pdf.write_html(question.formatted_answer)
-                    pdf.set_text_color(0)
-                ystart_new = ystart + question.height
-                if ystart_new > pdf.get_y():
-                    pdf.set_y(ystart_new)
+                    if ystart + question.height > page_height:
+                        pdf.add_page()
+                        pdf.set_y(TOP_SKIP)
+                        ystart = pdf.get_y()
+                    pdf.write_html(f'{iq+1}. {question.formatted_text}')
+                    if question.image:
+                        kwargs = {}
+                        if question.image.height > 200:
+                            kwargs['h'] = 50  # pragma: no cover
+                        elif question.image.width > 240:
+                            kwargs['w'] = 60  # pragma: no cover
+                        pdf.image(question.image, **kwargs)
+                    if print_key:
+                        pdf.set_text_color(255, 0, 0)
+                        pdf.write_html(question.formatted_answer)
+                        pdf.set_text_color(0)
+                    ystart_new = ystart + question.height
+                    if ystart_new > pdf.get_y():
+                        pdf.set_y(ystart_new)
         for page in self._back_pages:
             pdf.add_page()
             html = page.format(**self._variables)

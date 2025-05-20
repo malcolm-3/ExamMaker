@@ -76,10 +76,10 @@ def cli(title: str,
             back_pages.append(fh.read())
 
     with open(question_json, 'r') as fh:
-        question_list = QuestionSchema().loads(fh.read(), many=True)
+        sections = ExamSectionSchema().loads(fh.read(), many=True)
 
     builder = ExamBuilder(title, variables={'title': title},
-                          front_pages=front_pages, question_list=question_list, back_pages=back_pages)
+                          front_pages=front_pages, sections=sections, back_pages=back_pages)
 
     while nvers > 0:
         version_str, exam, exam_key = builder.generate_exam()

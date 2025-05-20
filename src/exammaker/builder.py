@@ -9,7 +9,7 @@ class ExamBuilder:
                  title="Exam",
                  variables=None,
                  front_pages=(),
-                 question_list=(),
+                 sections=(),
                  back_pages=(),
                  ):
         if variables is None:
@@ -18,7 +18,7 @@ class ExamBuilder:
         self._title = title
         self._variables = variables
         self._front_pages = front_pages
-        self._question_list = question_list
+        self._sections = sections
         self._back_pages = back_pages
 
         self._version = 0
@@ -34,16 +34,16 @@ class ExamBuilder:
         return ''.join(char_list)
 
     def generate_exam(self):
-        random.shuffle(self._question_list)
         version_str = self._version_to_str()
         self._variables['version'] = version_str
-        for question in self._question_list:
-            question.format_question(self._variables)
+        for section in self._sections:
+            section.shuffle()
+            section.format_questions(self._variables)
         exam = Exam(
             title=self._title,
             variables=self._variables,
             front_pages=self._front_pages,
-            question_list=self._question_list,
+            sections=self._sections,
             back_pages=self._back_pages
         )
         self._version += 1
