@@ -1,9 +1,11 @@
+from pathlib import Path
+
 from exammaker.builder import ExamBuilder
 from exammaker.section import ExamSectionSchema
 
 
-def test_builder():
-    with open("sections.json", "r") as fh:
+def test_builder() -> None:
+    with Path("sections.json").open("r") as fh:
         sections = ExamSectionSchema().loads(fh.read(), many=True)
 
     assert sections is not None

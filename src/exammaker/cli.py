@@ -80,7 +80,7 @@ def cli(  # noqa: PLR0913
     front_page: list[str],
     back_page: list[str],
     output_root: str,
-):
+) -> None:
     if not output_root:
         output_root = title  # pragma: no cover
 

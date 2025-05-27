@@ -1,3 +1,5 @@
+import pathlib
+
 from click.testing import CliRunner
 
 from exammaker.cli import cli
@@ -51,7 +53,8 @@ Options:
 """
 
 
-def test_cli(tmpdir):
+def test_cli(tmpdir: str) -> None:
+    tmpdirpath = pathlib.Path(tmpdir)
     runner = CliRunner()
 
     result = runner.invoke(cli, ["--help"])
@@ -66,7 +69,7 @@ def test_cli(tmpdir):
             "-f",
             "front2.html",
             "-o",
-            tmpdir.join("TestExam"),
+            str(tmpdirpath.joinpath("TestExam")),
             "-b",
             "back.html",
             "Test Exam",
@@ -75,7 +78,7 @@ def test_cli(tmpdir):
         ],
     )
     assert result.exit_code == 0
-    assert tmpdir.join("TestExam.a.exam.pdf").exists()
-    assert tmpdir.join("TestExam.a.key.pdf").exists()
-    assert tmpdir.join("TestExam.b.exam.pdf").exists()
-    assert tmpdir.join("TestExam.b.key.pdf").exists()
+    assert tmpdirpath.joinpath("TestExam.a.exam.pdf").exists()
+    assert tmpdirpath.joinpath("TestExam.a.key.pdf").exists()
+    assert tmpdirpath.joinpath("TestExam.b.exam.pdf").exists()
+    assert tmpdirpath.joinpath("TestExam.b.key.pdf").exists()

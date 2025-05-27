@@ -2,10 +2,10 @@ import re
 from math import sqrt
 
 import pytest
-from PIL import Image, ImageChops
 from marshmallow import ValidationError
+from PIL import Image, ImageChops
 
-from exammaker.question import QuestionSchema
+from exammaker.question import QuestionFormattingError, QuestionSchema
 
 INPUT_JSON_1 = (
     "{\n"
@@ -123,7 +123,7 @@ BAD_JSON_2 = (
 )
 
 
-def test_question():
+def test_question() -> None:
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_1)
@@ -144,7 +144,7 @@ def test_question():
     assert q.formatted_answer == f"{q.answer} = {sqrt(g * d)}"
 
 
-def test_question_with_image():
+def test_question_with_image() -> None:
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_2)
@@ -179,7 +179,7 @@ def test_question_with_image():
     assert not ImageChops.difference(q2.image, q.image).getbbox()
 
 
-def test_multiple_choice():
+def test_multiple_choice() -> None:
     schema = QuestionSchema()
 
     q = schema.loads(INPUT_JSON_3)
@@ -208,24 +208,24 @@ def test_multiple_choice():
     assert re.search(r"'Why' = Why \([ABCD]\)", q.formatted_answer)
 
 
-def test_bad_input():
+def test_bad_input() -> None:
     schema = QuestionSchema()
 
-    with pytest.raises(ValidationError) as e_info:
+    with pytest.raises(ValidationError):
         schema.loads(BAD_JSON_1)
 
-    with pytest.raises(ValidationError) as e_info:
+    with pytest.raises(ValidationError):
         schema.loads(BAD_JSON_2)
 
     q = schema.loads(INPUT_JSON_1)
     assert q is not None
 
     q.image = "THIS IS NOT A PIL IMAGE"
-    with pytest.raises(ValidationError) as e_info:
+    with pytest.raises(ValidationError):
         schema.dumps(q)
 
     q.image = ""
     q.variables.append(["badvar", "unknown_func()"])
 
-    with pytest.raises(Exception) as e_info:
+    with pytest.raises(QuestionFormattingError):
         q.format_question()

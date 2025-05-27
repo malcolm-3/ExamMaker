@@ -195,7 +195,7 @@ EXPECTED_JSON_2 = (
 )
 
 
-def test_section():
+def test_section() -> None:
     schema = ExamSectionSchema()
 
     section_list = schema.loads(INPUT_JSON_1, many=True)

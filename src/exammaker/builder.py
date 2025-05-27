@@ -1,17 +1,24 @@
 from .exam import Exam
+from .section import ExamSection
 
 
 class ExamBuilder:
     def __init__(
         self,
-        title="Exam",
-        variables=None,
-        front_pages=(),
-        sections=(),
-        back_pages=(),
-    ):
+        title: str = "Exam",
+        variables: dict[str, str] | None = None,
+        front_pages: list[str] | None = None,
+        sections: list[ExamSection] | None = None,
+        back_pages: list[str] | None = None,
+    ) -> None:
         if variables is None:
             variables = {}
+        if front_pages is None:
+            front_pages = []
+        if sections is None:
+            sections = []
+        if back_pages is None:
+            back_pages = []
 
         self._title = title
         self._variables = variables
@@ -21,8 +28,8 @@ class ExamBuilder:
 
         self._version = 0
 
-    def _version_to_str(self):
-        char_list = []
+    def _version_to_str(self) -> str:
+        char_list: list[str] = []
         orda = ord("a")
         v = self._version
         while v > 0 or len(char_list) == 0:
@@ -31,7 +38,13 @@ class ExamBuilder:
             char_list.insert(0, chr(orda + v26))
         return "".join(char_list)
 
-    def generate_exam(self):
+    def generate_exam(
+        self,
+    ) -> tuple[
+        str,
+        bytearray,
+        bytearray,
+    ]:
         version_str = self._version_to_str()
         self._variables["version"] = version_str
         for section in self._sections:

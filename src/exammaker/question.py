@@ -1,12 +1,11 @@
 import json
 import random
-from base64 import b64encode, b64decode
+from base64 import b64decode, b64encode
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
-from PIL import Image
-from marshmallow import Schema, fields, post_load, ValidationError
+from marshmallow import Schema, ValidationError, fields, post_load
+from PIL import Image, ImageFile
 
 from .parser import ExamMakerParser
 
@@ -27,8 +26,9 @@ DEFAULT_HEIGHT = {
 LETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
-class QuestionException(Exception):
-    pass
+class QuestionFormattingError(Exception):
+    def __init__(self, question_text: str) -> None:
+        super().__init__(f'Exception encountered with question "{question_text}"')
 
 
 class Question:
@@ -38,16 +38,16 @@ class Question:
         qtype: QuestionType = QuestionType.SHORT_ANSWER,
         text: str = "",
         answer: str = "",
-        alt_answers: Optional[list[str]] = None,
+        alt_answers: list[str] | None = None,
         all_of_the_above: bool = False,
         none_of_the_above: bool = False,
-        variables: Optional[list[list[str]]] = None,
-        height: Optional[float] = None,
-        image: Optional[Image.Image] = None,
-        image_file: Optional[Path] = None,
-    ):
+        variables: list[list[str]] | None = None,
+        height: float | None = None,
+        image: Image.Image | ImageFile.ImageFile | None = None,
+        image_file: Path | None = None,
+    ) -> None:
         if variables is None:
-            variables = {}  # pragma: no cover
+            variables = []  # pragma: no cover
         if alt_answers is None:
             alt_answers = []  # pragma: no cover
         if height is None:
@@ -61,22 +61,24 @@ class Question:
         self.all_of_the_above = all_of_the_above
         self.none_of_the_above = none_of_the_above
         self.variables = variables
-        self.image = None
-        self.formatted_text = None
-        self.formatted_answer = None
+        self.image: Image.Image | ImageFile.ImageFile | None = None
+        self.formatted_text: str = ""
+        self.formatted_answer: str = ""
+        self._formatted_variables: dict[str, str] = {}
+        self.formatted_alt_answers: list[str] = []
 
         if image is None and image_file:
             self.image = Image.open(image_file)
         else:
             self.image = image
 
-    def _clear_formatting(self):
+    def _clear_formatting(self) -> None:
         self._formatted_variables = {}
         self.formatted_text = ""
         self.formatted_answer = ""
         self.formatted_alt_answers = []
 
-    def format_question(self, global_variables=None):
+    def format_question(self, global_variables: dict[str, str] | None = None) -> None:
         try:
             if global_variables is None:
                 global_variables = {}
@@ -97,11 +99,9 @@ class Question:
                 self._multiple_choice_mods(answer_value)
 
         except Exception as e:
-            raise QuestionException(
-                'Exception encountered with question "' + self.text + '"'
-            ) from e
+            raise QuestionFormattingError(self.text) from e
 
-    def _multiple_choice_mods(self, answer_value):
+    def _multiple_choice_mods(self, answer_value: str) -> None:
         answer_list = []
         if answer_value not in ("All of the above", "None of the above"):
             answer_list.append(answer_value)
@@ -118,11 +118,12 @@ class Question:
 
 
 class ImageField(fields.Dict):
-    def _serialize(self, value, *_, **__):
+    def _serialize(self, value, *_, **__):  # type: ignore[no-untyped-def]
         if value is None:
             return ""
         if not isinstance(value, Image.Image):
-            raise ValidationError("Image is not of type PIL.Image.Image")
+            msg = "Image is not of type PIL.Image.Image"
+            raise ValidationError(msg)
         d = {
             "width": value.size[0],
             "height": value.size[1],
@@ -131,7 +132,7 @@ class ImageField(fields.Dict):
         }
         return json.dumps(d)
 
-    def _deserialize(self, value, *_, **__):
+    def _deserialize(self, value, *_, **__):  # type: ignore[no-untyped-def]
         if not value:
             return None
         try:
@@ -142,7 +143,8 @@ class ImageField(fields.Dict):
             mode = obj["mode"]
             return Image.frombytes(mode, (width, height), bdata)
         except Exception as e:
-            raise ValidationError(str(e))
+            msg = "Exception encoutered deserializing ImageField"
+            raise ValidationError(msg) from e
 
 
 class QuestionSchema(Schema):
@@ -158,5 +160,5 @@ class QuestionSchema(Schema):
     image_file = fields.Str(required=False, load_only=True)
 
     @post_load
-    def make_question(self, data, **_):
+    def make_question(self, data, **_):  # type: ignore[no-untyped-def]
         return Question(**data)

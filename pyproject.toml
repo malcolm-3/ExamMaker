@@ -2,6 +2,7 @@
 name = "exammaker"
 dependencies = [
     "fpdf2~=2.8",
+    "types-fpdf2",
     "marshmallow~=4.0",
     "Pillow~=11.2",
     "plusminus",
@@ -28,10 +29,10 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
@@ -41,7 +42,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9, <4.0"
+python = ">=3.10, <4.0"
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings = {version = ">=0.23", extras = ["python"]}
@@ -64,7 +65,7 @@ requires = [
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-target-version = "py39" # The lowest supported version
+target-version = "py310" # The lowest supported version
 
 [tool.ruff.lint]
 # By default, enable all the lint rules.
@@ -82,7 +83,9 @@ ignore = [
     "S101",     # "Use of `assert` detected"
     "ARG",      # "Unused function argument". Fixtures are often unused.
     "S105",     # "Possible hardcoded password".
-    "PLR2004"   # Constants in assertions
+    "PLR2004",  # Constants in assertions
+    "SLF001",   # "Private member accessed"
+    "E501",     # "Line too long"
 ]
 
 [tool.ruff.lint.mccabe]
@@ -115,6 +118,8 @@ exclude_lines = [
 # Avoid changing this!
 strict = true  # See all the enabled flags `mypy --help | grep -A 10 'Strict mode'`
 disallow_any_unimported = true
+follow_untyped_imports = true
+
 
 # If you need to ignore something for some specific module,
 # add overrides for them. Avoid changing the global config!
