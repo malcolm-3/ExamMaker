@@ -11,14 +11,10 @@ class ExamBuilder:
         sections: list[ExamSection] | None = None,
         back_pages: list[str] | None = None,
     ) -> None:
-        if variables is None:
-            variables = {}
-        if front_pages is None:
-            front_pages = []
-        if sections is None:
-            sections = []
-        if back_pages is None:
-            back_pages = []
+        if variables is None: variables = {}
+        if front_pages is None: front_pages = []
+        if sections is None: sections = []
+        if back_pages is None: back_pages = []
 
         self._title = title
         self._variables = variables
