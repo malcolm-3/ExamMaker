@@ -110,6 +110,7 @@ EXPECTED_JSON_2 = (
     '                "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  '
     'What is its final velocity?",\n'
     '                "answer": "sqrt(d*g)",\n'
+    '                "solution_text": "{answer_expression} = {answer_value}",\n'
     '                "alt_answers": [],\n'
     '                "all_of_the_above": false,\n'
     '                "none_of_the_above": false,\n'
@@ -135,6 +136,7 @@ EXPECTED_JSON_2 = (
     '                "text": "A mass <i>m</i><sub>1</sub> of {m1} kg falls from rest a distance of {d} meters.  '
     'What is its final kinetic energy?",\n'
     '                "answer": "m1 * d * g / 2",\n'
+    '                "solution_text": "{answer_expression} = {answer_value}",\n'
     '                "alt_answers": [],\n'
     '                "all_of_the_above": false,\n'
     '                "none_of_the_above": false,\n'
@@ -164,6 +166,7 @@ EXPECTED_JSON_2 = (
     '                "qtype": "MULTIPLE_CHOICE",\n'
     '                "text": "Is it shorter to New York or by bus?",\n'
     '                "answer": "\'None of the above\'",\n'
+    '                "solution_text": "{answer_expression} = {answer_value}",\n'
     '                "alt_answers": [\n'
     "                    \"'Who'\",\n"
     "                    \"'What'\",\n"
@@ -179,6 +182,7 @@ EXPECTED_JSON_2 = (
     '                "qtype": "MULTIPLE_CHOICE",\n'
     '                "text": "Is it shorter to New York or by bus?",\n'
     '                "answer": "\'Why\'",\n'
+    '                "solution_text": "{answer_expression} = {answer_value}",\n'
     '                "alt_answers": [\n'
     "                    \"'Who'\",\n"
     "                    \"'What'\",\n"

@@ -38,6 +38,7 @@ class Question:
         qtype: QuestionType = QuestionType.SHORT_ANSWER,
         text: str = "",
         answer: str = "",
+        solution_text: str = "{answer_expression} = {answer_value}",
         alt_answers: list[str] | None = None,
         all_of_the_above: bool = False,
         none_of_the_above: bool = False,
@@ -57,6 +58,7 @@ class Question:
         self.qtype = qtype
         self.text = text
         self.answer = answer
+        self.solution_text = solution_text
         self.alt_answers = alt_answers
         self.all_of_the_above = all_of_the_above
         self.none_of_the_above = none_of_the_above
@@ -88,13 +90,18 @@ class Question:
                 value = parser.evaluate(f"{varnam} = {varexp}")
                 self._formatted_variables[varnam] = value
             answer_value = parser.evaluate(f"answer = {self.answer}")
+            self._formatted_variables["answer_expression"] = self.answer
+            self._formatted_variables["answer_value"] = answer_value
             for alt_answer in self.alt_answers:
                 self.formatted_alt_answers.append(parser.evaluate(alt_answer))
             self.formatted_text = self.text.format(
                 **global_variables,
                 **self._formatted_variables,
             )
-            self.formatted_answer = " = ".join([self.answer, str(answer_value)])
+            self.formatted_answer = self.solution_text.format(
+                **global_variables,
+                **self._formatted_variables,
+            )
             if self.qtype == QuestionType.MULTIPLE_CHOICE:
                 self._multiple_choice_mods(answer_value)
 
@@ -152,6 +159,7 @@ class QuestionSchema(Schema):
     qtype = fields.Enum(QuestionType)
     text = fields.Str()
     answer = fields.Str()
+    solution_text = fields.Str()
     alt_answers = fields.List(fields.Str())
     all_of_the_above = fields.Bool()
     none_of_the_above = fields.Bool()
