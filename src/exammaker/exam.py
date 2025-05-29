@@ -20,9 +20,12 @@ class Exam:
         sections: list[ExamSection] | None = None,
         back_pages: list[str] | None = None,
     ):
-        if back_pages is None: back_pages = []
-        if sections is None: sections = []
-        if front_pages is None: front_pages = []
+        if back_pages is None:
+            back_pages = []  # pragma: no cover
+        if sections is None:
+            sections = []  # pragma: no cover
+        if front_pages is None:
+            front_pages = []  # pragma: no cover
         self._title = title
         if variables is None:
             variables = {}  # pragma: no cover
