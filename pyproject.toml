@@ -11,7 +11,7 @@ dependencies = [
 
 [tool.poetry]
 name = "exammaker"
-version = "0.0.1"
+version = "0.1.0"
 description = "Tool for generating exams in PDF"
 authors = [
     "Malcolm E. Davis <malcolm3davis@gmail.com>",
