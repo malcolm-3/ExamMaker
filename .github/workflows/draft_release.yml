@@ -1,5 +1,7 @@
 name: Draft a release
 
+environment: production
+
 on:
   workflow_dispatch:
     inputs:
