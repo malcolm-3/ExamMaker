@@ -14,6 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/python-poetry-env
+
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.ACTION_APP_ID }}
+          private-key: ${{ secrets.ACTION_APP_PRIVATE_KEY }}
       - name: Update version
         id: updated_version
         shell: bash
@@ -44,7 +51,7 @@ jobs:
       - name: Create a draft release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         with:
           tag_name: ${{ steps.updated_version.outputs.version }}
           release_name: Release ${{ steps.updated_version.outputs.version }}
