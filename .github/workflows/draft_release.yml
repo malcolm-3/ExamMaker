@@ -1,7 +1,5 @@
 name: Draft a release
 
-environment: production
-
 on:
   workflow_dispatch:
     inputs:
@@ -23,6 +21,7 @@ jobs:
         with:
           app-id: ${{ vars.ACTION_APP_ID }}
           private-key: ${{ secrets.ACTION_APP_PRIVATE_KEY }}
+
       - name: Update version
         id: updated_version
         shell: bash
