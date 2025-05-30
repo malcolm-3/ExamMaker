@@ -75,7 +75,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         if: ${{ steps.changes.outputs.changed > 0 && env.GITHUB_TOKEN != 0 }}
-        uses: peter-evans/create-pull-request
+        uses: peter-evans/create-pull-request@latest
         with:
           token: ${{ env.GITHUB_TOKEN }}
           commit-message: >-
