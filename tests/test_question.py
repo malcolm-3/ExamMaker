@@ -61,7 +61,7 @@ INPUT_JSON_2 = (
     '            "choose(11,12,13)"\n'
     "        ]\n"
     "    ],\n"
-    '    "image_file": "x.png"\n'
+    '    "image_file": "tests/x.png"\n'
     "}"
 )
 

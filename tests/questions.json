@@ -39,7 +39,7 @@
         "choose(11,12,13)"
       ]
     ],
-    "image_file": "x.png"
+    "image_file": "tests/x.png"
   },
   {
     "height": 120.0,

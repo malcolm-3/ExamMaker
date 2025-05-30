@@ -5,7 +5,7 @@ from exammaker.section import ExamSectionSchema
 
 
 def test_builder() -> None:
-    with Path("sections.json").open("r") as fh:
+    with Path("tests/sections.json").open("r") as fh:
         sections = ExamSectionSchema().loads(fh.read(), many=True)
 
     assert sections is not None
@@ -13,9 +13,9 @@ def test_builder() -> None:
 
     builder = ExamBuilder(
         title="Test Exam",
-        front_pages=["front1.html", "front2.html"],
+        front_pages=["tests/front1.html", "tests/front2.html"],
         sections=sections,
-        back_pages=["back.html"],
+        back_pages=["tests/back.html"],
     )
 
     assert builder is not None

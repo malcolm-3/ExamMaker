@@ -65,16 +65,16 @@ def test_cli(tmpdir: str) -> None:
         cli,
         [
             "-f",
-            "front1.html",
+            "tests/front1.html",
             "-f",
-            "front2.html",
+            "tests/front2.html",
             "-o",
             str(tmpdirpath.joinpath("TestExam")),
             "-b",
-            "back.html",
+            "tests/back.html",
             "Test Exam",
             "2",
-            "sections.json",
+            "tests/sections.json",
         ],
     )
     assert result.exit_code == 0
