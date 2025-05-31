@@ -76,10 +76,10 @@ jobs:
 
       # behaviour if PR already exists: https://github.com/marketplace/actions/create-pull-request#action-behaviour
       - name: Create Pull Request
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         if: ${{ steps.changes.outputs.changed > 0 && env.GITHUB_TOKEN != 0 }}
         uses: peter-evans/create-pull-request@7
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         with:
           token: ${{ env.GITHUB_TOKEN }}
           commit-message: >-
