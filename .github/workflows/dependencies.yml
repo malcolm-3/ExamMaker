@@ -58,7 +58,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         if: ${{ steps.check_for_outdated_dependencies.outputs.body != 0 }}
-        uses: peter-evans/create-pull-request@7
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ env.GITHUB_TOKEN }}
           commit-message: >-
