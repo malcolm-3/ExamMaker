@@ -4,7 +4,7 @@ dependencies = [
     "fpdf2~=2.8",
     "types-fpdf2",
     "marshmallow~=4.0",
-    "Pillow~=11.2",
+    "Pillow~=11.3",
     "plusminus",
     "click"
 ]
